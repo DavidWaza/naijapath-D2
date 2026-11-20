@@ -1,0 +1,473 @@
+/*
+ * NaijaPath design tokens (variant d2) — the design system's single source of truth.
+ * Pattern from ARCHITECTURE.md §2: raw hex in :root (@layer base) → mapped in @theme inline.
+ *
+ * `--color-*: initial` wipes Tailwind's stock palette. `bg-violet-500` etc. render NOTHING.
+ * If an element is invisible, check that its colour exists below before anything else.
+ *
+ * Breakpoints are defined ONCE, here. nuxt.config.ts `image.screens` mirrors them.
+ */
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* ── d2 palette: surfaces ──────────────────────────────────────── */
+    --cream: #f6f4ee; /* page ground: warm white, a step deeper than the cards on it */
+    --sheet: #ffffff; /* cards and white panels */
+    --card: #fbfaf7; /* quiet cards resting on the ground (problem/stat cards) */
+    --hairline: #e6e2d8; /* 1px card borders and dividers */
+
+    /* ── d2 palette: brand (NaijaPath green + terracotta) ──────────── */
+    --forest: #1b6b3a; /* green-500: primary brand green, icons, buttons */
+    --forest-deep: #1b3a2d; /* green-600: the dark fields (hero, Commission, footer) */
+    --forest-night: #15302a; /* cards sitting on a dark field */
+    --ember: #b5451b; /* terracotta-500: the action colour */
+    --ember-deep: #963614; /* terracotta-600: hover */
+
+    /* ── d2 palette: tints ─────────────────────────────────────────── */
+    --mint: #cfe3d6; /* green-150: the accent tile (icons, stage pills, photo backing) */
+    --sage: #e8f0eb; /* green-100 */
+    --mint-50: #f0f7f2; /* green-50 */
+    --sand: #fbefea; /* terracotta-50 */
+    --ember-soft: #f2b497; /* highlight on dark photo panels (auth statements) */
+    --mist: #eef2ef;
+
+    /* ── d2 palette: text ──────────────────────────────────────────── */
+    --ink: #1a1a1a; /* headings (never pure black) */
+    --body: #374151; /* body copy */
+    --muted: #636a76; /* second tone of two-tone headlines; supporting text (≥4.5:1 on cream) */
+    --moss: #8fae9a; /* second tone of headlines on the dark green field */
+
+    /* ── functional (status only — always paired with a text label) ── */
+    --success-50: #f0fdf4;
+    --success-150: #bbf7d0;
+    --success-500: #15803d;
+    --warning-50: #fffbeb;
+    --warning-150: #fde68a;
+    --warning-500: #b45309;
+    --danger-50: #fef2f2;
+    --danger-100: #fecaca; /* error text/border on dark surfaces */
+    --danger-150: #fecaca;
+    --danger-500: #b91c1c;
+    --info-50: #eff6ff;
+    --info-150: #bfdbfe;
+    --info-500: #1d4ed8;
+    --amber-500: #d97706; /* rating stars only */
+
+    /* ── LEGACY ALIASES (transition only) ──────────────────────────────
+       Sections not yet rebuilt still use the old ramp names. They are remapped onto the v3
+       brand values so those sections stay readable meanwhile. Delete this block once the last
+       section is rebuilt (tracked in AGENTS.md). Do not use these names in new work. */
+    --base-0: #ffffff;
+    --base-50: var(--cream);
+    --base-100: #f3f4f6;
+    --base-150: var(--hairline);
+    --base-500: var(--muted);
+    --base-600: var(--body);
+    --base-900: var(--ink);
+    --green-50: var(--mint-50);
+    --green-100: var(--sage);
+    --green-150: var(--mint);
+    --green-500: var(--forest);
+    --green-600: var(--forest-deep);
+    --terracotta-50: var(--sand);
+    --terracotta-100: #f3d9ce;
+    --terracotta-150: #e7bba8;
+    --terracotta-500: var(--ember);
+    --terracotta-600: var(--ember-deep);
+
+    /* ── shape ─────────────────────────────────────────────────────── */
+    --radius: 12px; /* legacy scale root (rounded-sm/lg/xl) */
+    --radius-sheet-v: 24px; /* the dark frames (hero, Commission, footer) */
+    --radius-card-v: 18px; /* cards and photos */
+    --sheet-inset: clamp(0.75rem, 0.55rem + 0.5vw, 1rem); /* 12px → 16px page margin */
+
+    /* ── motion ────────────────────────────────────────────────────── */
+    --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1); /* v3: every hover and reveal */
+    --ease-brand: var(--ease-out-soft);
+    --dur-ui: 200ms;
+    --dur-reveal: 800ms;
+    --dur-path: 1400ms;
+
+    /* ── layout ────────────────────────────────────────────────────── */
+    --header-h: 4.5rem;
+    --focus-ring: var(--forest);
+  }
+}
+
+@theme inline {
+  /* Palette reset: only the colours above exist. */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-white: #ffffff;
+
+  --color-cream: var(--cream);
+  --color-sheet: var(--sheet);
+  --color-card: var(--card);
+  --color-forest-night: var(--forest-night);
+  --color-mint: var(--mint);
+  --color-mint-50: var(--mint-50);
+  --color-moss: var(--moss);
+  --color-ember-soft: var(--ember-soft);
+  --color-hairline: var(--hairline);
+  --color-forest: var(--forest);
+  --color-forest-deep: var(--forest-deep);
+  --color-ember: var(--ember);
+  --color-ember-deep: var(--ember-deep);
+  --color-sage: var(--sage);
+  --color-sand: var(--sand);
+  --color-mist: var(--mist);
+  --color-ink: var(--ink);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+
+  --color-success-50: var(--success-50);
+  --color-success-150: var(--success-150);
+  --color-success-500: var(--success-500);
+  --color-warning-50: var(--warning-50);
+  --color-warning-150: var(--warning-150);
+  --color-warning-500: var(--warning-500);
+  --color-danger-50: var(--danger-50);
+  --color-danger-100: var(--danger-100);
+  --color-danger-150: var(--danger-150);
+  --color-danger-500: var(--danger-500);
+  --color-info-50: var(--info-50);
+  --color-info-150: var(--info-150);
+  --color-info-500: var(--info-500);
+  --color-amber-500: var(--amber-500);
+
+  /* Legacy ramp names (transition only — see :root). */
+  --color-base-0: var(--base-0);
+  --color-base-50: var(--base-50);
+  --color-base-100: var(--base-100);
+  --color-base-150: var(--base-150);
+  --color-base-500: var(--base-500);
+  --color-base-600: var(--base-600);
+  --color-base-900: var(--base-900);
+  --color-green-50: var(--green-50);
+  --color-green-100: var(--green-100);
+  --color-green-150: var(--green-150);
+  --color-green-500: var(--green-500);
+  --color-green-600: var(--green-600);
+  --color-terracotta-50: var(--terracotta-50);
+  --color-terracotta-100: var(--terracotta-100);
+  --color-terracotta-150: var(--terracotta-150);
+  --color-terracotta-500: var(--terracotta-500);
+  --color-terracotta-600: var(--terracotta-600);
+
+  /* Breakpoint reset: defined once, here. */
+  --breakpoint-*: initial;
+  --breakpoint-xs: 23.4375rem; /* 375px */
+  --breakpoint-sm: 40rem; /* 640px */
+  --breakpoint-md: 48rem; /* 768px */
+  --breakpoint-lg: 64rem; /* 1024px */
+  --breakpoint-xl: 80rem; /* 1280px */
+  --breakpoint-2xl: 90rem; /* 1440px */
+
+  --spacing: 0.25rem;
+
+  --radius-*: initial;
+  --radius-sm: calc(var(--radius) - 4px); /* 8px */
+  --radius-lg: var(--radius); /* 12px */
+  --radius-xl: calc(var(--radius) + 4px); /* 16px */
+  --radius-card: var(--radius-card-v); /* 24px — v3 cards and photos */
+  --radius-sheet: var(--radius-sheet-v); /* 28px — v3 inset panels */
+
+  --shadow-*: initial;
+  --shadow-soft: 0 8px 30px rgb(27 58 45 / 0.05); /* resting */
+  --shadow-lift: 0 14px 40px rgb(27 58 45 / 0.1); /* hover lift */
+  --shadow-bar: 0 6px 24px rgb(22 33 27 / 0.06); /* v3: compact scrolled header */
+  --shadow-card: 0 2px 8px rgb(0 0 0 / 0.08); /* legacy */
+  --shadow-card-hover: 0 4px 16px rgb(0 0 0 / 0.12); /* legacy */
+
+  /* Headings and UI: Plus Jakarta Sans. Body: Inter (build prompt §Typography). */
+  --font-*: initial;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-heading:
+    "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: var(--font-sans);
+  /* Accent only: the highlighted words on the auth photo panel. */
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+
+  /* ── v3 type scale ─────────────────────────────────────────────── */
+  --text-hero-v: clamp(
+    2.25rem,
+    1.6rem + 2.6vw,
+    3.625rem
+  ); /* 36px phones → 58px desktop: two lines from 1280px */
+  --text-hero-v--line-height: 1.06;
+  --text-hero-v--letter-spacing: -0.02em;
+  --text-title: clamp(1.75rem, 1.3rem + 1.7vw, 2.75rem); /* 28px phones → 44px */
+  --text-title--line-height: 1.12;
+  --text-title--letter-spacing: -0.02em;
+  --text-subtitle: clamp(1.25rem, 1.12rem + 0.45vw, 1.5rem); /* 20px → 24px card titles (H3) */
+  --text-subtitle--line-height: 1.2;
+  --text-subtitle--letter-spacing: -0.015em;
+  --text-figure: clamp(2.25rem, 1.7rem + 1.8vw, 3.25rem); /* stats: 36px → 52px */
+  --text-figure--line-height: 1;
+  --text-figure--letter-spacing: -0.03em;
+  --text-copy: clamp(1rem, 0.96rem + 0.15vw, 1.0625rem); /* 16px phones → 17px desktop */
+  --text-copy--line-height: 1.6;
+  --text-eyebrow: 0.8125rem; /* 13px */
+  --text-eyebrow--line-height: 1.2;
+  --text-eyebrow--letter-spacing: 0.05em;
+
+  /* ── legacy type scale (sections not yet rebuilt) ─────────────── */
+  --text-hero: clamp(2rem, 1.6rem + 1.75vw, 3rem);
+  --text-hero--line-height: 1.08;
+  --text-hero--letter-spacing: -0.02em;
+  --text-display: clamp(1.625rem, 1.2rem + 2.1vw, 3.25rem);
+  --text-display--line-height: 1.12;
+  --text-display--letter-spacing: -0.02em;
+  --text-h2: clamp(1.75rem, 1.5rem + 0.6vw, 2rem);
+  --text-h2--line-height: 1.2;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h3: clamp(1.25rem, 1.15rem + 0.35vw, 1.5rem);
+  --text-h3--line-height: 1.3;
+  --text-lead: clamp(1rem, 0.93rem + 0.3vw, 1.125rem);
+  --text-lead--line-height: 1.6;
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1.2;
+  --text-stat: clamp(2rem, 1.7rem + 1vw, 2.5rem);
+  --text-stat--line-height: 1;
+  --text-stage: clamp(3rem, 2.5rem + 1.6vw, 4rem);
+  --text-stage--line-height: 1;
+
+  --container-site: 75rem; /* 1200px — v3 */
+  --container-page: 80rem; /* legacy */
+  --container-prose: 68ch;
+  --container-measure: 62ch; /* v3 body measure */
+
+  --ease-out-soft: var(--ease-out-soft);
+  --ease-brand: var(--ease-brand);
+}
+
+/* ── Global base ───────────────────────────────────────────────────── */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    color-scheme: light;
+    background-color: var(--cream);
+    /* Themed browser surfaces: scrollbar, caret, underline offset. */
+    scrollbar-color: color-mix(in oklab, var(--forest) 45%, var(--cream)) var(--cream);
+    caret-color: var(--forest);
+    text-underline-offset: 0.2em;
+  }
+
+  /* Anchor jumps land below the sticky header (native, scrollIntoView, router and Lenis). */
+  [id] {
+    scroll-margin-top: var(--header-h);
+  }
+
+  /* Native smooth scrolling only when Lenis is NOT driving the page and motion is allowed. */
+  @media (prefers-reduced-motion: no-preference) {
+    html:not(.lenis) {
+      scroll-behavior: smooth;
+    }
+  }
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: clip;
+  }
+
+  body {
+    background-color: var(--cream);
+    color: var(--body);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "ss01" 0;
+    overflow-x: clip; /* belt-and-braces: no horizontal scroll at 320px */
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--ink);
+    /* Phones: "pretty" (only avoids orphans) — "balance" evens line lengths, which on a narrow
+       screen leaves two words per line. Balance returns from 1024px. */
+    text-wrap: pretty;
+  }
+  @media (width >= 64rem) {
+    h1,
+    h2,
+    h3,
+    h4 {
+      text-wrap: balance;
+    }
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    display: block;
+    max-width: 100%;
+  }
+
+  img {
+    height: auto;
+  }
+
+  ::selection {
+    background-color: var(--sage);
+    color: var(--ink);
+  }
+
+  /* Focus: 2px solid forest, 2px offset. Dark surfaces flip the ring to white. Never removed. */
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  [data-surface="dark"] {
+    --focus-ring: #ffffff;
+  }
+
+  [tabindex="-1"]:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Reduced motion: no animation anywhere. Components also render their final frame. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ── Utilities that need real CSS ──────────────────────────────────── */
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* v3: an inset "sheet" — the panel language of the whole site. Sits on the cream ground with a
+   12–16px page margin and a 28px radius. Pair with a tone class (bg-sheet, bg-forest, bg-sage…). */
+@utility sheet {
+  margin-inline: var(--sheet-inset);
+  border-radius: var(--radius-sheet-v);
+  overflow: clip;
+}
+
+/* v3: vertical rhythm between sections: 48px on phones → ~124px on wide desktops. */
+@utility section-y {
+  padding-block: clamp(3rem, 0.5rem + 8vw, 8.5rem); /* 48px phones → ~124px wide desktops */
+}
+
+/* v3: the 1200px container with 16–32px side gutters. */
+@utility site-container {
+  width: 100%;
+  max-width: calc(75rem + 2 * clamp(1rem, 0.6rem + 1.6vw, 2rem));
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 0.6rem + 1.6vw, 2rem); /* 16px phones → 32px */
+}
+
+/* v3: subtle film grain for the dark forest field. Sits between the background and the content
+   (isolated stacking context), never over text. */
+@utility grain {
+  position: relative;
+  isolation: isolate;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.18;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/* d2: photographs are shown as shot (brief: true skin tones, no filters). Kept as a no-op hook. */
+@utility photo-grade {
+  filter: none;
+}
+
+@utility measure {
+  max-width: 62ch;
+}
+
+/* Below-the-fold sections: skip style/layout/paint until they approach the viewport.
+   Light sections only (see AGENTS.md: axe misreads skipped dark backgrounds). */
+@utility defer-render {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+@utility prose-measure {
+  max-width: 68ch;
+}
+
+/* Text link with a moving underline (hover/focus). */
+@utility link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 300ms var(--ease-out-soft);
+  &:hover,
+  &:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+/* ── Line-art stroke draw ─────────────────────────────────────────────
+   NIcon `draw` gives every shape pathLength=1. The drawing redraws when its host (any ancestor
+   with data-draw-host) is hovered or focused, or once when a host gets data-drawn="in".
+   Reduced motion: the global rule above collapses the animation to its final, fully drawn frame. */
+[data-draw] > * {
+  stroke-dasharray: 1 1;
+}
+[data-draw-host]:is(:hover, :focus-within) [data-draw] > *,
+[data-draw-host][data-drawn="in"] [data-draw] > * {
+  animation: icon-draw 1100ms var(--ease-out-soft) both;
+}
+[data-draw-host]:is(:hover, :focus-within) [data-draw] > :nth-child(2n),
+[data-draw-host][data-drawn="in"] [data-draw] > :nth-child(2n) {
+  animation-delay: 90ms;
+}
+@keyframes icon-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Legacy one-shot reveal (sections not yet rebuilt). v3 sections use the motion composables. */
+@utility reveal {
+  .js &:not([data-revealed="true"]) {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  transition:
+    opacity 400ms var(--ease-brand),
+    transform 400ms var(--ease-brand);
+  transition-delay: var(--reveal-delay, 0ms);
+}
